@@ -43,10 +43,12 @@ const PROJECT_TYPE_MAPPING = {
 const PROJECT_API_CONFIG = {
   tontine: {
     apiPath: '/tontines', // Chemin dans l'API backend
+    publicApiPath: '/tontines', // Chemin pour l'endpoint public (sans auth)
+    usePublicEndpoint: true, // Utiliser l'endpoint public /{id}/public
     dataMapper: (data) => ({
       name: data?.name || null,
-      members: data?.current_participants_count || null,
-      cycles: data?.available_cycles || null
+      members: data?.members || null, // Note: l'endpoint public retourne "members" au lieu de "current_participants_count"
+      cycles: data?.cycles || null // Note: l'endpoint public retourne "cycles" au lieu de "available_cycles"
     })
   }
   // Exemple pour ajouter un nouveau type:
@@ -65,6 +67,13 @@ function getInternalProjectType(publicType) {
   return PROJECT_TYPE_MAPPING[publicType] || publicType;
 }
 
+// Fonction pour nettoyer un ID (enlever les préfixes comme "id:" ou "ObjectId(")
+function cleanProjectId(id) {
+  if (!id) return id;
+  // Enlever les préfixes courants (id:, ObjectId(, etc.)
+  return id.replace(/^(id:|ObjectId\()?/i, '').replace(/\)$/, '');
+}
+
 // Fonction helper pour vérifier si un projet existe
 async function checkProjectExists(projectType, id) {
   try {
@@ -73,7 +82,10 @@ async function checkProjectExists(projectType, id) {
       return false;
     }
     
-    const response = await axios.get(`${API_URL}${config.apiPath}/${id}`, {
+    // Nettoyer l'ID avant de faire l'appel API
+    const cleanId = cleanProjectId(id);
+    
+    const response = await axios.get(`${API_URL}${config.apiPath}/${cleanId}`, {
       timeout: 5000,
       validateStatus: (status) => status < 500 // Ne pas throw pour 404, seulement pour erreurs serveur
     });
@@ -99,7 +111,10 @@ async function checkProjectExists(projectType, id) {
 // Format: /qr/:projectType/:id
 app.get('/qr/:projectType/:id', async (req, res) => {
   try {
-    const { projectType, id } = req.params;
+    let { projectType, id } = req.params;
+    
+    // Nettoyer l'ID s'il contient un préfixe
+    id = cleanProjectId(id);
     
     // Construire l'URL complète de l'invitation
     const protocol = req.protocol;
@@ -139,7 +154,14 @@ app.get('/qr/:projectType/:id', async (req, res) => {
 // Endpoint proxy générique pour récupérer les infos d'un projet
 app.get('/api/:projectType/:id', async (req, res) => {
   try {
-    const { projectType: publicType, id } = req.params;
+    let { projectType: publicType, id } = req.params;
+    
+    console.log(`Received request: /api/${publicType}/${id}`);
+    console.log(`Raw ID from params: ${id}`);
+    
+    // Nettoyer l'ID s'il contient un préfixe
+    id = cleanProjectId(id);
+    console.log(`Cleaned ID: ${id}`);
     const projectType = getInternalProjectType(publicType); // Convertir l'URL publique en clé interne
     const config = PROJECT_API_CONFIG[projectType];
     
@@ -153,12 +175,24 @@ app.get('/api/:projectType/:id', async (req, res) => {
     }
     
     console.log(`Fetching ${projectType} data for ID: ${id} (public type: ${publicType})`);
+    console.log(`Cleaned ID: ${id}`);
     
     try {
-      const response = await axios.get(`${API_URL}${config.apiPath}/${id}`, {
+      // Utiliser l'endpoint public si disponible, sinon l'endpoint normal
+      const endpointPath = config.usePublicEndpoint && config.publicApiPath
+        ? `${config.publicApiPath}/${id}/public`
+        : `${config.apiPath}/${id}`;
+      
+      const fullUrl = `${API_URL}${endpointPath}`;
+      console.log(`Calling API: ${fullUrl}`);
+      
+      const response = await axios.get(fullUrl, {
         timeout: 5000,
         validateStatus: (status) => status < 500
       });
+      
+      console.log(`API response status: ${response.status}`);
+      console.log(`API response data:`, JSON.stringify(response.data, null, 2));
       
       // Si le projet n'existe pas (404), rediriger en production
       if (response.status === 404) {
@@ -175,7 +209,10 @@ app.get('/api/:projectType/:id', async (req, res) => {
       }
       
       console.log(`${projectType} data fetched successfully`);
-      res.json(config.dataMapper(response.data));
+      console.log('Raw API response:', JSON.stringify(response.data, null, 2));
+      const mappedData = config.dataMapper(response.data);
+      console.log('Mapped data:', JSON.stringify(mappedData, null, 2));
+      res.json(mappedData);
     } catch (apiError) {
       // Si c'est une erreur 404, rediriger en production
       if (apiError.response && apiError.response.status === 404) {
@@ -214,7 +251,10 @@ app.get('/api/:projectType/:id', async (req, res) => {
 // Format: /invite/{projectType}/{id}
 // Pour ajouter un nouveau type, ajoutez simplement les traductions dans translations.js
 app.get('/invite/:projectType/:id', async (req, res) => {
-  const { projectType, id } = req.params;
+  let { projectType, id } = req.params;
+  
+  // Nettoyer l'ID s'il contient un préfixe
+  id = cleanProjectId(id);
   
   // Rediriger les anciennes URLs "tontine" vers "savings-circle"
   if (projectType === 'tontine') {

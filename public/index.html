@@ -750,6 +750,8 @@
         
         const data = await response.json();
         console.log(`${projectType} data received:`, data);
+        console.log('Data name value:', data?.name);
+        console.log('Data keys:', Object.keys(data || {}));
         
         if (data && data.name) {
           nameElement.textContent = data.name;
