@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const QRCode = require('qrcode');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,9 +26,6 @@ app.get('/', (req, res) => {
   // Si pas de redirection configurée, servir la page d'invitation par défaut
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
-// Servir les fichiers statiques
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Mapping entre l'URL publique et la clé interne
 // L'URL publique peut être différente de la clé utilisée en interne
@@ -63,6 +61,40 @@ const PROJECT_API_CONFIG = {
 function getInternalProjectType(publicType) {
   return PROJECT_TYPE_MAPPING[publicType] || publicType;
 }
+
+// Route pour générer le QR code
+// Format: /qr/:projectType/:id
+app.get('/qr/:projectType/:id', async (req, res) => {
+  try {
+    const { projectType, id } = req.params;
+    
+    // Construire l'URL complète de l'invitation
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const inviteUrl = `${protocol}://${host}/invite/${projectType}/${id}`;
+    
+    console.log(`Generating QR code for: ${inviteUrl}`);
+    
+    // Générer le QR code en PNG
+    const qrCodeBuffer = await QRCode.toBuffer(inviteUrl, {
+      type: 'png',
+      width: 400,
+      margin: 2,
+      color: {
+        dark: '#2e2e2e',
+        light: '#ffffff'
+      }
+    });
+    
+    // Envoyer l'image
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache 1 heure
+    res.send(qrCodeBuffer);
+  } catch (error) {
+    console.error('Error generating QR code:', error);
+    res.status(500).send('Error generating QR code');
+  }
+});
 
 // Endpoint proxy générique pour récupérer les infos d'un projet
 app.get('/api/:projectType/:id', async (req, res) => {
@@ -140,6 +172,9 @@ app.get('/.well-known/assetlinks.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.sendFile(path.join(__dirname, 'public', '.well-known', 'assetlinks.json'));
 });
+
+// Servir les fichiers statiques (après toutes les routes spécifiques)
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(PORT, () => {
   console.log(`🚀 Serveur d'invitation démarré sur le port ${PORT}`);

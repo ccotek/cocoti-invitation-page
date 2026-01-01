@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="/translations.js"></script>
   <style>
     * {
@@ -83,6 +82,24 @@
       filter: blur(60px);
     }
     
+    @media (min-width: 769px) {
+      .gradient-blob-1 {
+        top: -15rem;
+        right: -20%;
+        height: 30rem;
+        width: 30rem;
+        filter: blur(80px);
+      }
+      
+      .gradient-blob-2 {
+        bottom: -20%;
+        left: -20%;
+        height: 28rem;
+        width: 28rem;
+        filter: blur(80px);
+      }
+    }
+    
     .container {
       position: relative;
       z-index: 1;
@@ -102,6 +119,56 @@
       flex-direction: column;
       gap: 1.5rem;
       width: 100%;
+    }
+    
+    /* Layout desktop amélioré */
+    @media (min-width: 769px) {
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+      }
+      
+      .content {
+        flex: 1;
+        max-width: 600px;
+      }
+      
+      .desktop-layout {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+        width: 100%;
+      }
+      
+      .desktop-left {
+        flex: 1;
+        max-width: 600px;
+      }
+      
+      .desktop-right {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+      }
+      
+      /* Sur mobile, le layout reste en colonne */
+      @media (max-width: 768px) {
+        .desktop-layout {
+          flex-direction: column;
+          gap: 2rem;
+        }
+        
+        .desktop-left,
+        .desktop-right {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
     }
     
     /* Logo Cocoti */
@@ -129,6 +196,23 @@
       font-weight: 700;
       color: white;
       line-height: 1;
+    }
+    
+    @media (min-width: 769px) {
+      .logo-container {
+        justify-content: flex-start;
+        margin-bottom: 1.5rem;
+      }
+      
+      .logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+      }
+      
+      .logo-text {
+        font-size: 32px;
+      }
     }
     
     /* Badge style mobile */
@@ -191,6 +275,30 @@
       padding: 0 0.5rem;
     }
     
+    @media (min-width: 769px) {
+      h1 {
+        font-size: 2.5rem;
+        text-align: left;
+        line-height: 1.1;
+      }
+      
+      .tontine-name {
+        font-size: 1.5rem;
+        text-align: left;
+      }
+      
+      .subtitle {
+        font-size: 1.125rem;
+        text-align: left;
+        padding: 0;
+        line-height: 1.7;
+      }
+      
+      .badge {
+        align-self: flex-start;
+      }
+    }
+    
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -229,6 +337,20 @@
     .btn:active {
       transform: scale(0.98);
       box-shadow: 0 4px 16px rgba(255, 58, 129, 0.3);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(255, 58, 129, 0.4);
+    }
+    
+    @media (min-width: 769px) {
+      .btn {
+        width: auto;
+        min-width: 280px;
+        padding: 1.125rem 2rem;
+        font-size: 1.125rem;
+      }
     }
     
     .btn-icon {
@@ -272,6 +394,45 @@
       height: auto;
     }
     
+    /* Style desktop pour le QR code */
+    @media (min-width: 769px) {
+      .qr-card {
+        margin-top: 0;
+        padding: 2rem;
+        border-radius: 1.75rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        min-width: 280px;
+        display: block !important; /* Forcer l'affichage sur desktop */
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .qr-card.show {
+        display: block !important;
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .qr-label {
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      #qrcode {
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      #qrcode {
+        border-radius: 1rem;
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+    }
+    
     /* Stats cards style mobile */
     .stats-grid {
       display: grid;
@@ -288,6 +449,18 @@
       border: 1px solid rgba(255, 255, 255, 0.8);
       border-radius: 1.25rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    
+    @media (min-width: 769px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      
+      .stat-card {
+        padding: 1.25rem 1.5rem;
+      }
     }
     
     .stat-value {
@@ -323,55 +496,61 @@
     </div>
     
     <div class="container">
-      <div class="content">
-        <!-- Logo Cocoti -->
-        <div class="logo-container">
-          <div class="logo">
-            <span class="logo-text">C</span>
-          </div>
-        </div>
-        
-        <!-- Badge style mobile -->
-        <span class="badge" id="badge">
-          <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.813 5.146a.5.5 0 0 1 .374 0l5.5 2.5a.5.5 0 0 1 .313.464v5a.5.5 0 0 1-.146.354l-5.5 5.5a.5.5 0 0 1-.708 0l-5.5-5.5a.5.5 0 0 1-.146-.354v-5a.5.5 0 0 1 .313-.464l5.5-2.5z" fill="currentColor" opacity="0.3"/>
-            <path d="M12 8l-3 1.5v3L12 16l3-3.5v-3L12 8z" fill="currentColor"/>
-          </svg>
-          <span id="badgeText"></span>
-        </span>
-        
-        <h1 id="pageTitle"></h1>
-        
-        <div class="tontine-name" id="tontineName"></div>
-        
-        <p class="subtitle" id="pageSubtitle"></p>
-        
-        <!-- Bouton de téléchargement - pleine largeur mobile -->
-        <a href="#" id="downloadBtn" class="btn">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <span id="downloadText">Télécharger l'application</span>
-        </a>
-        
-        <!-- Stats (optionnel, affiché si les données sont disponibles) -->
-        <div class="stats-grid" id="statsGrid" style="display: none;">
-          <div class="stat-card">
-            <span class="stat-value" id="statMembers">-</span>
-            <p class="stat-label">Membres actifs</p>
-          </div>
-          <div class="stat-card">
-            <span class="stat-value" id="statCycles">-</span>
-            <p class="stat-label">Cycles restants</p>
+      <div class="desktop-layout">
+        <div class="desktop-left">
+          <div class="content">
+            <!-- Logo Cocoti -->
+            <div class="logo-container">
+              <div class="logo">
+                <span class="logo-text">C</span>
+              </div>
+            </div>
+            
+            <!-- Badge style mobile -->
+            <span class="badge" id="badge">
+              <svg class="badge-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.813 5.146a.5.5 0 0 1 .374 0l5.5 2.5a.5.5 0 0 1 .313.464v5a.5.5 0 0 1-.146.354l-5.5 5.5a.5.5 0 0 1-.708 0l-5.5-5.5a.5.5 0 0 1-.146-.354v-5a.5.5 0 0 1 .313-.464l5.5-2.5z" fill="currentColor" opacity="0.3"/>
+                <path d="M12 8l-3 1.5v3L12 16l3-3.5v-3L12 8z" fill="currentColor"/>
+              </svg>
+              <span id="badgeText"></span>
+            </span>
+            
+            <h1 id="pageTitle"></h1>
+            
+            <div class="tontine-name" id="tontineName"></div>
+            
+            <p class="subtitle" id="pageSubtitle"></p>
+            
+            <!-- Bouton de téléchargement - pleine largeur mobile -->
+            <a href="#" id="downloadBtn" class="btn">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span id="downloadText">Télécharger l'application</span>
+            </a>
+            
+            <!-- Stats (optionnel, affiché si les données sont disponibles) -->
+            <div class="stats-grid" id="statsGrid" style="display: none;">
+              <div class="stat-card">
+                <span class="stat-value" id="statMembers">-</span>
+                <p class="stat-label">Membres actifs</p>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value" id="statCycles">-</span>
+                <p class="stat-label">Cycles restants</p>
+              </div>
+            </div>
           </div>
         </div>
         
         <!-- QR Code (desktop uniquement) -->
-        <div class="qr-card" id="qrContainer">
-          <p class="qr-label">Scannez ce code avec votre téléphone</p>
-          <div class="qr-code-wrapper">
-            <div id="qrcode"></div>
+        <div class="desktop-right">
+          <div class="qr-card" id="qrContainer">
+            <p class="qr-label">Scannez ce code avec votre téléphone</p>
+            <div class="qr-code-wrapper">
+              <img id="qrcode" src="" alt="QR Code" style="display: none;" />
+            </div>
           </div>
         </div>
       </div>
@@ -383,7 +562,12 @@
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
     const isAndroid = /android/i.test(userAgent);
-    const isMobile = isIOS || isAndroid;
+    // Détection mobile améliorée : vérifier aussi la largeur de l'écran
+    const isMobileDevice = isIOS || isAndroid;
+    const isMobileScreen = window.innerWidth <= 768;
+    const isMobile = isMobileDevice || isMobileScreen;
+    
+    console.log('Device detection:', { isIOS, isAndroid, isMobileDevice, isMobileScreen, isMobile, screenWidth: window.innerWidth });
     
     // Mapping entre l'URL publique et la clé interne (doit correspondre à server.js)
     // Note: "tontine" n'est plus utilisé publiquement
@@ -470,28 +654,70 @@
       console.error('Translations not loaded properly!', { t, lang, publicProjectType, projectType });
     }
     
-    // Générer le QR code (uniquement sur desktop)
-    if (!isMobile && typeof QRCode !== 'undefined') {
-      document.getElementById('qrContainer').classList.add('show');
-      const qrSize = Math.min(220, window.innerWidth - 80);
-      QRCode.toCanvas(document.createElement('canvas'), inviteUrl, {
-        width: qrSize,
-        height: qrSize,
-        margin: 2,
-        color: {
-          dark: '#2e2e2e',
-          light: '#ffffff'
-        }
-      }, function (error, canvas) {
-        if (error) {
-          console.error('Error generating QR code:', error);
-        } else {
-          const qrcodeContainer = document.getElementById('qrcode');
-          qrcodeContainer.innerHTML = '';
-          qrcodeContainer.appendChild(canvas);
-        }
-      });
+    // Afficher le QR code (généré côté serveur)
+    function setupQRCode() {
+      const qrContainer = document.getElementById('qrContainer');
+      const qrImage = document.getElementById('qrcode');
+      
+      if (!qrContainer || !qrImage) {
+        console.error('QR elements not found');
+        return;
+      }
+      
+      // Vérifier si on est sur desktop (largeur > 768px)
+      const isDesktop = window.innerWidth > 768;
+      
+      if (!isDesktop) {
+        console.log('QR code hidden (small screen)');
+        qrContainer.classList.remove('show');
+        qrImage.style.display = 'none';
+        return;
+      }
+      
+      // Afficher le container du QR code
+      qrContainer.classList.add('show');
+      
+      // Construire l'URL du QR code côté serveur
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+      const inviteIndex = pathParts.indexOf('invite');
+      const projectType = inviteIndex !== -1 && pathParts[inviteIndex + 1] ? pathParts[inviteIndex + 1] : 'savings-circle';
+      const projectId = inviteIndex !== -1 && pathParts[inviteIndex + 2] ? pathParts[inviteIndex + 2] : null;
+      
+      if (projectId) {
+        // Définir le src de l'image pour charger le QR code depuis le serveur
+        qrImage.src = `/qr/${projectType}/${projectId}`;
+        qrImage.style.display = 'block';
+        qrImage.style.maxWidth = '100%';
+        qrImage.style.height = 'auto';
+        qrImage.style.borderRadius = '0.75rem';
+        qrImage.onerror = function() {
+          console.error('Failed to load QR code image');
+          qrImage.style.display = 'none';
+        };
+        qrImage.onload = function() {
+          console.log('✅ QR code image loaded successfully');
+        };
+      } else {
+        console.warn('No project ID found, cannot generate QR code');
+        qrImage.style.display = 'none';
+      }
     }
+    
+    // Initialiser le QR code après le chargement du DOM
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupQRCode);
+    } else {
+      setupQRCode();
+    }
+    
+    // Réessayer si la fenêtre est redimensionnée vers desktop
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        setupQRCode();
+      }, 300);
+    });
     
     // Récupérer le nom et les stats du projet
     async function fetchProjectData() {
