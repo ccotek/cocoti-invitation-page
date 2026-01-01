@@ -75,20 +75,31 @@ app.get('/qr/:projectType/:id', async (req, res) => {
     
     console.log(`Generating QR code for: ${inviteUrl}`);
     
-    // Générer le QR code en PNG
+    // Générer le QR code en PNG avec couleurs Cocoti
+    // Utiliser le magenta Cocoti (#ff3a81) qui est la couleur finale du dégradé
+    console.log('Generating QR code with Cocoti colors...');
+    
     const qrCodeBuffer = await QRCode.toBuffer(inviteUrl, {
       type: 'png',
       width: 400,
       margin: 2,
       color: {
-        dark: '#2e2e2e',
-        light: '#ffffff'
-      }
+        // Utiliser le magenta Cocoti, légèrement assombri pour le contraste
+        // Cela respecte la charte graphique tout en gardant la lisibilité
+        dark: '#e02d6b', // Magenta Cocoti (#ff3a81) assombri pour meilleur contraste
+        light: '#ffffff' // Fond blanc
+      },
+      // Niveau de correction d'erreur élevé pour compenser la couleur non-noire
+      errorCorrectionLevel: 'H'
     });
     
-    // Envoyer l'image
+    console.log('QR code generated successfully with custom colors');
+    
+    // Envoyer l'image avec headers pour éviter le cache pendant le développement
     res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache 1 heure
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate'); // Pas de cache pour tester
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.send(qrCodeBuffer);
   } catch (error) {
     console.error('Error generating QR code:', error);
