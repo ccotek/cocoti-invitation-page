@@ -22,10 +22,17 @@ PORT=3001
 # En production, utiliser: https://api.cocoti.com/api/v1
 API_URL=http://localhost:8001/api/v1
 
-# URL de redirection pour la racine (optionnel)
-# Si configuré, accéder à http://localhost:3001/ redirigera vers cette URL
+# URL de redirection pour la racine et les URLs inexistantes (optionnel)
+# Si configuré, accéder à http://localhost:3001/ ou à une URL inexistante redirigera vers cette URL
+# Les IDs de projet invalides redirigeront aussi vers cette URL (en production)
 # Exemple: https://cocoti.com
 ROOT_REDIRECT_URL=https://cocoti.com
+
+# Environnement (optionnel)
+# "dev" ou "development" : mode test, désactive les redirections 404 et la vérification des IDs
+# "production" ou non défini : mode production, active toutes les redirections
+# Par défaut: production
+ENVIRONMENT=dev
 ```
 
 ## Démarrage
@@ -69,7 +76,10 @@ Les variables d'environnement sont chargées depuis le fichier `.env` grâce à 
 
 - **PORT** : Port d'écoute du serveur (défaut: 3001)
 - **API_URL** : URL de l'API backend (défaut: http://localhost:8001/api/v1)
-- **ROOT_REDIRECT_URL** : URL de redirection pour la racine `/` (optionnel). Si configuré, accéder à la racine redirigera vers cette URL. Sinon, la page d'invitation par défaut sera servie.
+- **ROOT_REDIRECT_URL** : URL de redirection pour la racine `/`, les URLs inexistantes (404) et les IDs de projet invalides (optionnel). Si configuré, toutes ces URLs redirigeront vers cette URL en production.
+- **ENVIRONMENT** : Environnement d'exécution (optionnel, défaut: production). 
+  - `dev` ou `development` : Mode test, désactive les redirections 404 et la vérification des IDs de projet
+  - `production` ou non défini : Mode production, active toutes les redirections
 
 ## Configuration importante avant déploiement
 
