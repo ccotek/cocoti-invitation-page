@@ -8,11 +8,23 @@ const axios = require('axios');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const API_URL = process.env.API_URL || 'http://localhost:8001/api/v1';
+const ROOT_REDIRECT_URL = process.env.ROOT_REDIRECT_URL;
 
 // Log des variables d'environnement chargées (pour debug)
 console.log('📋 Configuration:');
 console.log(`   PORT: ${PORT}`);
 console.log(`   API_URL: ${API_URL}`);
+console.log(`   ROOT_REDIRECT_URL: ${ROOT_REDIRECT_URL || '(non configuré)'}`);
+
+// Route pour la racine : rediriger vers l'URL configurée
+app.get('/', (req, res) => {
+  if (ROOT_REDIRECT_URL) {
+    console.log(`Redirecting root to: ${ROOT_REDIRECT_URL}`);
+    return res.redirect(301, ROOT_REDIRECT_URL);
+  }
+  // Si pas de redirection configurée, servir la page d'invitation par défaut
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));

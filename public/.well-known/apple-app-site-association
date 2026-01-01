@@ -3,9 +3,10 @@
     "apps": [],
     "details": [
       {
-        "appID": "TEAMID.com.cocoti.app",
+        "appID": "TEAMID.sn.cocoti.app",
         "paths": [
-          "/invite/tontine/*"
+          "/invite/savings-circle/*",
+          "/invite/savings_circle/*"
         ]
       }
     ]
