@@ -19,14 +19,14 @@ PORT=3001
 
 # URL de l'API backend Cocoti
 # Par défaut: http://localhost:8001/api/v1
-# En production, utiliser: https://api.cocoti.com/api/v1
+# En production, utiliser: https://api.cocoti.app/api/v1
 API_URL=http://localhost:8001/api/v1
 
 # URL de redirection pour la racine et les URLs inexistantes (optionnel)
 # Si configuré, accéder à http://localhost:3001/ ou à une URL inexistante redirigera vers cette URL
 # Les IDs de projet invalides redirigeront aussi vers cette URL (en production)
-# Exemple: https://cocoti.com
-ROOT_REDIRECT_URL=https://cocoti.com
+# Exemple: https://cocoti.app
+ROOT_REDIRECT_URL=https://cocoti.app
 
 # Environnement (optionnel)
 # "dev" ou "development" : mode test, désactive les redirections 404 et la vérification des IDs
