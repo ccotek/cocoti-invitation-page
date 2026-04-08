@@ -5,8 +5,11 @@
       {
         "appID": "TEAMID.sn.cocoti.app",
         "paths": [
+          "/invite/tontine/*",
           "/invite/savings-circle/*",
-          "/invite/savings_circle/*"
+          "/invite/savings_circle/*",
+          "/invite/serving-circle/*",
+          "/invite/serving_circle/*"
         ]
       }
     ]

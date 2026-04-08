@@ -5,10 +5,10 @@ const translations = {
   fr: {
     // Clé interne (utilisée pour l'API, pas pour l'URL publique)
     tontine: {
-      badge: "Épargne Rotative",
-      title: "Rejoignez cette épargne rotative",
-      subtitle: "Téléchargez l'application Cocoti pour participer à cette épargne rotative et gérer vos contributions en toute sécurité.",
-      defaultName: "Épargne Rotative",
+      badge: "Tontine",
+      title: "Rejoignez cette tontine",
+      subtitle: "Téléchargez l'application Cocoti pour participer à cette tontine et gérer vos contributions en toute sécurité.",
+      defaultName: "Tontine",
       loading: "Chargement...",
       download: "Télécharger l'application",
       downloadIOS: "Télécharger sur l'App Store",
@@ -19,10 +19,10 @@ const translations = {
     },
     // URL publique "savings-circle"
     'savings-circle': {
-      badge: "Épargne Rotative",
-      title: "Rejoignez cette épargne rotative",
-      subtitle: "Téléchargez l'application Cocoti pour participer à cette épargne rotative et gérer vos contributions en toute sécurité.",
-      defaultName: "Épargne Rotative",
+      badge: "Tontine",
+      title: "Rejoignez cette tontine",
+      subtitle: "Téléchargez l'application Cocoti pour participer à cette tontine et gérer vos contributions en toute sécurité.",
+      defaultName: "Tontine",
       loading: "Chargement...",
       download: "Télécharger l'application",
       downloadIOS: "Télécharger sur l'App Store",
@@ -32,10 +32,10 @@ const translations = {
       qrLabel: "Scannez ce code avec votre téléphone"
     },
     'savings_circle': {
-      badge: "Épargne Rotative",
-      title: "Rejoignez cette épargne rotative",
-      subtitle: "Téléchargez l'application Cocoti pour participer à cette épargne rotative et gérer vos contributions en toute sécurité.",
-      defaultName: "Épargne Rotative",
+      badge: "Tontine",
+      title: "Rejoignez cette tontine",
+      subtitle: "Téléchargez l'application Cocoti pour participer à cette tontine et gérer vos contributions en toute sécurité.",
+      defaultName: "Tontine",
       loading: "Chargement...",
       download: "Télécharger l'application",
       downloadIOS: "Télécharger sur l'App Store",
@@ -48,10 +48,10 @@ const translations = {
   en: {
     // Clé interne (utilisée pour l'API, pas pour l'URL publique)
     tontine: {
-      badge: "Savings Circle",
-      title: "Join this savings circle",
-      subtitle: "Download the Cocoti app to participate in this savings circle and manage your contributions securely.",
-      defaultName: "Savings Circle",
+      badge: "Tontine",
+      title: "Join this tontine",
+      subtitle: "Download the Cocoti app to participate in this tontine and manage your contributions securely.",
+      defaultName: "Tontine",
       loading: "Loading...",
       download: "Download the app",
       downloadIOS: "Download on the App Store",
@@ -62,10 +62,10 @@ const translations = {
     },
     // URL publique "savings-circle"
     'savings-circle': {
-      badge: "Savings Circle",
-      title: "Join this savings circle",
-      subtitle: "Download the Cocoti app to participate in this savings circle and manage your contributions securely.",
-      defaultName: "Savings Circle",
+      badge: "Tontine",
+      title: "Join this tontine",
+      subtitle: "Download the Cocoti app to participate in this tontine and manage your contributions securely.",
+      defaultName: "Tontine",
       loading: "Loading...",
       download: "Download the app",
       downloadIOS: "Download on the App Store",
@@ -75,10 +75,10 @@ const translations = {
       qrLabel: "Scan this code with your phone"
     },
     'savings_circle': {
-      badge: "Savings Circle",
-      title: "Join this savings circle",
-      subtitle: "Download the Cocoti app to participate in this savings circle and manage your contributions securely.",
-      defaultName: "Savings Circle",
+      badge: "Tontine",
+      title: "Join this tontine",
+      subtitle: "Download the Cocoti app to participate in this tontine and manage your contributions securely.",
+      defaultName: "Tontine",
       loading: "Loading...",
       download: "Download the app",
       downloadIOS: "Download on the App Store",
@@ -112,26 +112,35 @@ function getLanguage() {
 // Fonction pour obtenir les traductions
 // Supporte automatiquement tous les types définis dans translations
 function getTranslations(lang, projectType) {
+  const normalizedProjectTypeMap = {
+    'serving-circle': 'tontine',
+    serving_circle: 'tontine',
+    'savings-circle': 'tontine',
+    savings_circle: 'tontine'
+  };
+
+  const normalizedProjectType = normalizedProjectTypeMap[projectType] || projectType;
+
   if (!projectType) {
     console.warn('No project type provided');
-    // Fallback sur savings-circle (URL publique) au lieu de tontine
-    return translations[lang]?.['savings-circle'] || translations.en?.['savings-circle'];
+    // Fallback sur tontine
+    return translations[lang]?.tontine || translations.en?.tontine;
   }
   
   // Vérifier si le type existe dans les traductions pour la langue demandée
-  if (translations[lang] && translations[lang][projectType]) {
-    return translations[lang][projectType];
+  if (translations[lang] && translations[lang][normalizedProjectType]) {
+    return translations[lang][normalizedProjectType];
   }
   
   // Fallback sur l'anglais si la langue n'existe pas
-  if (translations.en && translations.en[projectType]) {
-    console.warn(`Translation for "${projectType}" not found in "${lang}", using English`);
-    return translations.en[projectType];
+  if (translations.en && translations.en[normalizedProjectType]) {
+    console.warn(`Translation for "${normalizedProjectType}" not found in "${lang}", using English`);
+    return translations.en[normalizedProjectType];
   }
   
-  // Fallback sur savings-circle (URL publique) si le type n'existe pas
-  console.warn(`Project type "${projectType}" not found in translations, using "savings-circle" as fallback`);
-  return translations[lang]?.['savings-circle'] || translations.en?.['savings-circle'];
+  // Fallback sur tontine si le type n'existe pas
+  console.warn(`Project type "${normalizedProjectType}" not found in translations, using "tontine" as fallback`);
+  return translations[lang]?.tontine || translations.en?.tontine;
 }
 
 // Liste des types de projets supportés

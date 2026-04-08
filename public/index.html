@@ -572,10 +572,12 @@
     console.log('Device detection:', { isIOS, isAndroid, isMobileDevice, isMobileScreen, isMobile, screenWidth: window.innerWidth });
     
     // Mapping entre l'URL publique et la clé interne (doit correspondre à server.js)
-    // Note: "tontine" n'est plus utilisé publiquement
     const PROJECT_TYPE_MAPPING = {
-      'savings-circle': 'tontine', // URL publique → clé interne
-      'savings_circle': 'tontine' // Alternative avec underscore
+      tontine: 'tontine',
+      'savings-circle': 'tontine',
+      savings_circle: 'tontine',
+      'serving-circle': 'tontine',
+      serving_circle: 'tontine'
     };
     
     // Fonction pour convertir l'URL publique en clé interne
@@ -587,7 +589,7 @@
     // Format attendu: /invite/{projectType}/{projectId}
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const inviteIndex = pathParts.indexOf('invite');
-    const publicProjectType = inviteIndex !== -1 && pathParts[inviteIndex + 1] ? pathParts[inviteIndex + 1] : 'savings-circle';
+    const publicProjectType = inviteIndex !== -1 && pathParts[inviteIndex + 1] ? pathParts[inviteIndex + 1] : 'tontine';
     const projectId = inviteIndex !== -1 && pathParts[inviteIndex + 2] ? pathParts[inviteIndex + 2] : null;
     
     // Convertir l'URL publique en clé interne pour les traductions et l'API
@@ -614,8 +616,8 @@
     // Vérifier que les traductions sont bien chargées
     if (!t || !t.title) {
       console.error('No translations found!', { lang, publicProjectType, projectType });
-      // Fallback sur savings-circle (URL publique)
-      t = translations.fr?.['savings-circle'] || translations.en?.['savings-circle'];
+      // Fallback sur tontine (URL canonique)
+      t = translations.fr?.tontine || translations.en?.tontine;
     }
     
     console.log('URL pathname:', window.location.pathname);
@@ -682,7 +684,7 @@
       // Construire l'URL du QR code côté serveur
       const pathParts = window.location.pathname.split('/').filter(Boolean);
       const inviteIndex = pathParts.indexOf('invite');
-      const projectType = inviteIndex !== -1 && pathParts[inviteIndex + 1] ? pathParts[inviteIndex + 1] : 'savings-circle';
+      const projectType = inviteIndex !== -1 && pathParts[inviteIndex + 1] ? pathParts[inviteIndex + 1] : 'tontine';
       const projectId = inviteIndex !== -1 && pathParts[inviteIndex + 2] ? pathParts[inviteIndex + 2] : null;
       
       if (projectId) {

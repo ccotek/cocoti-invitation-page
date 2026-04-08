@@ -32,10 +32,14 @@ app.get('/', (req, res) => {
 
 // Mapping entre l'URL publique et la clé interne
 // L'URL publique peut être différente de la clé utilisée en interne
-// Note: "tontine" n'est plus utilisé publiquement, seulement "savings-circle"
+// URL canonique publique: "tontine"
+// Les anciennes URLs restent supportées pour compatibilité
 const PROJECT_TYPE_MAPPING = {
-  'savings-circle': 'tontine', // URL publique → clé interne
-  'savings_circle': 'tontine' // Alternative avec underscore
+  tontine: 'tontine',
+  'savings-circle': 'tontine',
+  savings_circle: 'tontine',
+  'serving-circle': 'tontine',
+  serving_circle: 'tontine'
 };
 
 // Configuration des endpoints API par type de projet (utilise les clés internes)
@@ -256,9 +260,9 @@ app.get('/invite/:projectType/:id', async (req, res) => {
   // Nettoyer l'ID s'il contient un préfixe
   id = cleanProjectId(id);
   
-  // Rediriger les anciennes URLs "tontine" vers "savings-circle"
-  if (projectType === 'tontine') {
-    return res.redirect(301, `/invite/savings-circle/${id}`);
+  // Rediriger les anciennes URLs vers l'URL canonique "tontine"
+  if (projectType === 'savings-circle' || projectType === 'savings_circle' || projectType === 'serving-circle' || projectType === 'serving_circle') {
+    return res.redirect(301, `/invite/tontine/${id}`);
   }
   
   // Vérifier que le type est supporté
@@ -319,7 +323,7 @@ app.use((req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Serveur d'invitation démarré sur le port ${PORT}`);
-  console.log(`📱 Visitez http://localhost:${PORT}/invite/savings-circle/test123 pour tester`);
+  console.log(`📱 Visitez http://localhost:${PORT}/invite/tontine/test123 pour tester`);
   console.log(`ℹ️  Note: Cette page est uniquement pour les projets nécessitant l'app mobile`);
   if (ROOT_REDIRECT_URL) {
     console.log(`🔄 Redirection 404 activée vers: ${ROOT_REDIRECT_URL}`);
